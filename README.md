@@ -1,4 +1,4 @@
-# Amazon FreeRTOS Examples
+# FreeRTOS Examples
 
 This repo shows how to set up a CMake project for ESP32 and use amazon freertos as an external library.
 
@@ -7,7 +7,7 @@ See the official document for software prerequisite, https://docs.aws.amazon.com
 Build instruction,
 
 ```sh
-cmake -S . -B build -DCMAKE_TOOLCHAIN_FILE=amazon-freertos/tools/cmake/toolchains/xtensa-esp32.cmake -GNinja
+cmake -S . -B build -DCMAKE_TOOLCHAIN_FILE=freertos/tools/cmake/toolchains/xtensa-esp32.cmake -GNinja
 ```
 
 To flash,
@@ -20,7 +20,7 @@ To monitor the output,
 
 ```sh
 export ESPPORT <replace-with-serial-port-of-ESP32>
-amazon-freertos/vendors/espressif/esp-idf/tools/idf.py monitor
+freertos/vendors/espressif/esp-idf/tools/idf.py monitor
 ```
 
 ## Troubleshooting

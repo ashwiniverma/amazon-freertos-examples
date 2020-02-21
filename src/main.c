@@ -70,8 +70,8 @@
     #include "iot_ble_numericComparison.h"
 #endif
 
-/* Demonstrate use of component foo. */
-#include <foo.h>
+/* Demonstrate use of component common.h. */
+#include <common.h>
 
 /* Logging Task Defines. */
 #define mainLOGGING_MESSAGE_QUEUE_LENGTH    ( 32 )
@@ -112,7 +112,7 @@ int app_main( void )
 
     if( SYSTEM_Init() == pdPASS )
     {
-        configPRINTF( ( "Calling foo: %d\n", foo() ));
+        configPRINTF( ( "Calling foo: %d\n", common_foo() ));
 
         /* A simple example to demonstrate key and certificate provisioning in
          * microcontroller flash using PKCS#11 interface. This should be replaced
