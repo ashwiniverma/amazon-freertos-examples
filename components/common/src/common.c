@@ -1,5 +1,5 @@
 #include "common.h"
-#include "esp_bt.h"
+#include "lwip/sockets.h"
 
 int common_foo()
 {

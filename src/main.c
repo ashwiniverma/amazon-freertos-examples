@@ -40,8 +40,10 @@
 #include "iot_logging_task.h"
 
 #include "nvs_flash.h"
-
+#if !AFR_ESP_LWIP
+#include "FreeRTOS_IP.h"
 #include "FreeRTOS_Sockets.h"
+#endif
 
 #include "esp_system.h"
 #include "esp_wifi.h"
@@ -56,6 +58,7 @@
 
 #include "driver/uart.h"
 #include "aws_application_version.h"
+#include "tcpip_adapter.h"
 
 #include "iot_network_manager_private.h"
 
@@ -112,8 +115,6 @@ int app_main( void )
 
     if( SYSTEM_Init() == pdPASS )
     {
-        configPRINTF( ( "Calling foo: %d\n", common_foo() ));
-
         /* A simple example to demonstrate key and certificate provisioning in
          * microcontroller flash using PKCS#11 interface. This should be replaced
          * by production ready key provisioning mechanism. */
@@ -170,7 +171,13 @@ static void prvMiscInitialization( void )
                             tskIDLE_PRIORITY + 5,
                             mainLOGGING_MESSAGE_QUEUE_LENGTH );
 
+#if AFR_ESP_LWIP
+    configPRINTF( ("Initializing lwIP TCP stack\r\n") );
+    tcpip_adapter_init();
+#else
+    configPRINTF( ("Initializing FreeRTOS TCP stack\r\n") );
     vApplicationIPInit();
+#endif
 }
 
 /*-----------------------------------------------------------*/
@@ -189,11 +196,6 @@ static void prvMiscInitialization( void )
             esp_err_t xRet;
 
             xRet = esp_bt_controller_mem_release( ESP_BT_MODE_BLE );
-
-            if( xRet == ESP_OK )
-            {
-                xRet = esp_bt_controller_mem_release( ESP_BT_MODE_BTDM );
-            }
 
             return xRet;
         }
@@ -333,8 +335,8 @@ void vApplicationDaemonTaskStartupHook( void )
 {
 }
 
+#if !AFR_ESP_LWIP
 /*-----------------------------------------------------------*/
-
 void vApplicationIPNetworkEventHook( eIPCallbackEvent_t eNetworkEvent )
 {
     uint32_t ulIPAddress, ulNetMask, ulGatewayAddress, ulDNSServerAddress;
@@ -358,3 +360,4 @@ void vApplicationIPNetworkEventHook( eIPCallbackEvent_t eNetworkEvent )
         esp_event_send( &evt );
     }
 }
+#endif
